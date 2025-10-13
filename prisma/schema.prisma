@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  nameAr    String
+  slug      String    @unique
+  icon      String
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id                String   @id @default(cuid())
+  name              String
+  nameAr            String
+  slug              String   @unique
+  brand             String
+  brandAr           String
+  description       String
+  descriptionAr     String
+  price             Float
+  stock             Int
+  sku               String   @unique
+  barCode           String?
+  dosageForm        String
+  dosageFormAr      String
+  activeIngredient  String
+  activeIngredientAr String
+  leafletUrl        String?
+  isRX              Boolean  @default(false)
+  isOTC             Boolean  @default(true)
+  storageNotes      String?
+  storageNotesAr    String?
+  warnings          String?
+  warningsAr        String?
+  categoryId        String
+  category          Category @relation(fields: [categoryId], references: [id])
+  rating            Float    @default(0)
+  reviewsCount      Int      @default(0)
+  images            String[] // Array of image URLs
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tags              ProductTag[]
+}
+
+model Tag {
+  id        String       @id @default(cuid())
+  name      String
+  nameAr    String
+  slug      String       @unique
+  products  ProductTag[]
+  createdAt DateTime     @default(now())
+}
+
+model ProductTag {
+  productId String
+  tagId     String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+}
