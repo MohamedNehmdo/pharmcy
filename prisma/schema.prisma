@@ -46,7 +46,7 @@ model Product {
   category          Category @relation(fields: [categoryId], references: [id])
   rating            Float    @default(0)
   reviewsCount      Int      @default(0)
-  images            String[] // Array of image URLs
+  images String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   tags              ProductTag[]
